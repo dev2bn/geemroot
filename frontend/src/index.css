@@ -387,3 +387,79 @@ img { max-width: 100%; }
   .title { font-size: 1.5rem; }
   .cat-section { margin-top: 32px; }
 }
+/* ===== Fiche produit : mobile ===== */
+@media (max-width: 900px) {
+  .pd-grid { grid-template-columns: 1fr; gap: 24px; }
+}
+@media (max-width: 600px) {
+  .pd { padding-top: 8px; }
+  .pd-crumbs { flex-wrap: wrap; }
+  .pd-head { flex-direction: column; gap: 8px; }
+  .pd-badge { align-self: flex-start; }
+  .pd-price { font-size: 24px; }
+  .pd-form input, .pd-form textarea { font-size: 16px; } /* évite le zoom iOS */
+  .pd-btn-dark, .pd-btn-outline { padding: 15px; font-size: 15px; }
+  .pd-qty button { width: 40px; height: 40px; }
+  .pd-tabs button { flex: 0 0 auto; padding: 12px 14px; }
+}
+
+/* ===== Admin : mobile ===== */
+@media (max-width: 800px) {
+  .adm-head { flex-wrap: wrap; gap: 10px; }
+  .adm-filters { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; }
+  .adm-filters button { flex: 0 0 auto; }
+  .adp-actions { width: 100%; }
+  .adp-actions a, .adp-actions button { flex: 1; text-align: center; padding: 10px; }
+  .adm-form { max-width: 100%; }
+  .adm-form input, .adm-form textarea, .adm-form select { font-size: 16px; }
+}
+
+/* ===== Page commande ===== */
+.ao { max-width: 1000px; padding-bottom: 48px; }
+.ao-back { display: inline-block; font-size: 13px; color: #555; margin-bottom: 12px; }
+.ao-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 20px; }
+.ao-head h1 { font-size: 24px; }
+.ao-head p { color: #777; font-size: 13px; margin-top: 2px; }
+.ao-badge { font-size: 13px; padding: 6px 14px; text-transform: capitalize; white-space: nowrap; }
+.ao-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 20px; align-items: start; }
+.ao-col { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+.ao-card { background: #f6f1e7; border-radius: 16px; padding: 18px; }
+.ao-card h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: #777; font-weight: 600; margin-bottom: 12px; }
+.ao-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #e6dfd0; }
+.ao-item:first-of-type { padding-top: 0; }
+.ao-item img, .ao-noimg { width: 52px; height: 52px; border-radius: 10px; object-fit: cover; background: #e6dfd0; flex-shrink: 0; }
+.ao-item-info { flex: 1; min-width: 0; display: flex; flex-direction: column; font-size: 14px; }
+.ao-item-info span { color: #777; font-size: 13px; }
+.ao-item > strong { font-size: 14px; white-space: nowrap; }
+.ao-totals { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; }
+.ao-totals div { display: flex; justify-content: space-between; }
+.ao-totals .ao-total { border-top: 1px solid #ddd5c4; padding-top: 10px; margin-top: 4px; font-size: 17px; font-weight: 700; }
+.ao-kv { margin: 0 0 12px; font-size: 14px; }
+.ao-kv span { display: block; color: #777; font-size: 12px; margin-bottom: 1px; }
+.ao-actions { display: flex; gap: 8px; margin-top: 4px; }
+.ao-actions a { flex: 1; text-align: center; padding: 11px; border-radius: 999px; font-size: 13px; font-weight: 600; background: #111; color: #fff; }
+.ao-actions a.alt { background: #fff; color: #111; border: 1px solid #ddd5c4; }
+.ao-status { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.ao-status button { padding: 12px; border: 2px solid transparent; border-radius: 10px; background: #fff; font-size: 13px; cursor: pointer; text-transform: capitalize; }
+.ao-status button.current { border-color: #111; font-weight: 700; }
+.ao-status button:disabled { opacity: .6; cursor: wait; }
+@media (max-width: 800px) {
+  .ao-grid { grid-template-columns: 1fr; }
+  .ao-head h1 { font-size: 20px; }
+}
+/* ===== Fiche produit : correctif mobile ===== */
+.pd-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.pd-grid > * { min-width: 0; }
+.pd-tabs { max-width: 100%; }
+
+@media (max-width: 900px) {
+  .pd-grid { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+}
+
+@media (max-width: 600px) {
+  .pd-frame { padding: 10px; border-radius: 16px; }
+  .pd-frame img { aspect-ratio: 4 / 3; }
+  .pd-thumbs { display: none; }       /* les 4 miniatures sont la même image */
+  .pd-head h1 { font-size: 22px; overflow-wrap: anywhere; }
+  .pd-desc, .pd-tab-text { overflow-wrap: anywhere; }
+}
