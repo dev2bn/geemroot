@@ -351,7 +351,6 @@ body { overflow-x: clip; }
 .adc-assign .pd-btn-dark { margin: 6px 0 0; }
 .cat-section { margin-top: 48px; }
 img { max-width: 100%; }
-body { overflow-x: hidden; }
 
 @media (max-width: 900px) {
   .grid { grid-template-columns: repeat(2, 1fr) !important; gap: 14px; }

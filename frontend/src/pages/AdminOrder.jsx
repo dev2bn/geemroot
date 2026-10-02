@@ -8,8 +8,6 @@ const STATUSES = ['nouvelle', 'confirmée', 'livrée', 'annulée']
 const fmt = (n) => `${Number(n).toLocaleString('fr-FR')} ${CURRENCY}`
 const isUrl = (u) => /^(https?:)?\/\/|^\/api\/uploads\//.test(u || '')
 
-const TABS = { articles: 'Articles', client: 'Client', livraison: 'Livraison', statut: 'Statut' }
-
 export default function AdminOrder() {
   const { id } = useParams()
   const [order, setOrder] = useState(null)
@@ -17,8 +15,6 @@ export default function AdminOrder() {
   const [loading, setLoading] = useState(true)
   const [updating, setUpdating] = useState(false)
   const [error, setError] = useState('')
-  const [tab, setTab] = useState('articles')
-  const [sel, setSel] = useState(0)
 
   useEffect(() => {
     setLoading(true)
@@ -61,136 +57,85 @@ export default function AdminOrder() {
   if (!order) return <p className="error">{error || 'Commande introuvable'}</p>
 
   const items = order.items || []
-  const current = items[sel] || items[0]
-  const bigImg = current ? imageFor(current) : null
   const delivery = Number(order.delivery_fee) > 0 ? fmt(order.delivery_fee) : 'À confirmer'
   const date = order.created_at
     ? new Date(order.created_at).toLocaleString('fr-FR', { dateStyle: 'long', timeStyle: 'short' })
     : ''
+  const digits = (order.phone || '').replace(/\D/g, '')
 
   return (
-    <div className="pd pdo">
-      <nav className="pd-crumbs">
-        <Link to="/admin">Commandes</Link>
-        <span>›</span>
-        <strong>n°{order.id}</strong>
-      </nav>
+    <div className="adm ao">
+      <Link to="/admin" className="ao-back">← Commandes</Link>
 
-      <div className="pd-grid">
-        {/* Colonne image */}
+      <header className="ao-head">
         <div>
-          <div className="pd-frame">
-            {bigImg ? <img src={bigImg} alt={current.product_name} /> : <div className="pdo-noimg pdo-big" />}
-          </div>
-          {current && (
-            <p className="pdo-cap">
-              {current.product_name} × {current.quantity}
-            </p>
-          )}
-          <div className="pd-thumbs">
-            {items.map((it, i) => {
+          <h1>Commande n°{order.id}</h1>
+          <p>{date}</p>
+        </div>
+        <span className={`adm-status ao-badge s-${order.status}`}>{order.status}</span>
+      </header>
+
+      {error && <p className="error">{error}</p>}
+
+      <div className="ao-grid">
+        <div className="ao-col">
+          <section className="ao-card">
+            <h2>Articles ({items.length})</h2>
+            {items.map((it) => {
               const img = imageFor(it)
               return (
-                <button
-                  key={it.id}
-                  type="button"
-                  className={`pd-thumb ${i === sel ? 'active' : ''}`}
-                  onClick={() => setSel(i)}
-                >
-                  {img ? <img src={img} alt="" /> : <div className="pdo-noimg" />}
-                </button>
+                <div className="ao-item" key={it.id}>
+                  {img ? <img src={img} alt="" /> : <div className="ao-noimg" />}
+                  <div className="ao-item-info">
+                    <strong>{it.product_name}</strong>
+                    <span>{fmt(it.unit_price)} × {it.quantity}</span>
+                  </div>
+                  <strong>{fmt(it.unit_price * it.quantity)}</strong>
+                </div>
               )
             })}
-          </div>
+            <div className="ao-totals">
+              <div><span>Sous-total</span><span>{fmt(order.subtotal)}</span></div>
+              <div><span>Livraison</span><span>{delivery}</span></div>
+              <div className="ao-total"><span>Total</span><span>{fmt(order.total)}</span></div>
+            </div>
+          </section>
         </div>
 
-        {/* Colonne infos */}
-        <div className="pd-info">
-          <div className="pd-head">
-            <h1>Commande n°{order.id}</h1>
-            <span className={`pd-badge s-${order.status}`}>{order.status}</span>
-          </div>
-          <p className="pd-price">{fmt(order.total)}</p>
-          <p className="pd-desc">
-            {date}
-            <br />
-            {order.customer_name} · {order.phone}
-          </p>
-
-          {error && <p className="error">{error}</p>}
-
-          <div className="pd-tabs">
-            {Object.entries(TABS).map(([key, label]) => (
-              <button
-                key={key}
-                type="button"
-                className={tab === key ? 'active' : ''}
-                onClick={() => setTab(key)}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
-
-          {tab === 'articles' && (
-            <div className="pdo-pane">
-              {items.map((it) => {
-                const img = imageFor(it)
-                return (
-                  <div className="pdo-row" key={it.id}>
-                    {img ? <img src={img} alt="" /> : <div className="pdo-noimg" />}
-                    <div>
-                      <strong>{it.product_name}</strong>
-                      <span>{fmt(it.unit_price)} × {it.quantity}</span>
-                    </div>
-                    <strong>{fmt(it.unit_price * it.quantity)}</strong>
-                  </div>
-                )
-              })}
-              <div className="pd-sum" style={{ marginTop: 14 }}>
-                <p><span>Sous-total</span><span>{fmt(order.subtotal)}</span></p>
-                <p><span>Livraison</span><span>{delivery}</span></p>
-                <p className="pd-total"><span>Total</span><span>{fmt(order.total)}</span></p>
-              </div>
+        <div className="ao-col">
+          <section className="ao-card">
+            <h2>Client</h2>
+            <p className="ao-kv"><span>Nom</span>{order.customer_name}</p>
+            <p className="ao-kv"><span>Téléphone</span>{order.phone}</p>
+            {order.email && <p className="ao-kv"><span>Email</span>{order.email}</p>}
+            <div className="ao-actions">
+              <a href={`tel:${order.phone}`}>Appeler</a>
+              <a className="alt" href={`https://wa.me/${digits}`} target="_blank" rel="noreferrer">WhatsApp</a>
             </div>
-          )}
+          </section>
 
-          {tab === 'client' && (
-            <div className="pdo-pane">
-              <p className="pdo-kv"><span>Nom</span>{order.customer_name}</p>
-              <p className="pdo-kv"><span>Téléphone</span><a href={`tel:${order.phone}`}>{order.phone}</a></p>
-              {order.email && (
-                <p className="pdo-kv"><span>Email</span><a href={`mailto:${order.email}`}>{order.email}</a></p>
-              )}
-              <p className="pdo-kv"><span>Adresse</span>{order.address}</p>
-            </div>
-          )}
+          <section className="ao-card">
+            <h2>Livraison</h2>
+            <p className="ao-kv"><span>Adresse</span>{order.address}</p>
+            <p className="ao-kv"><span>Frais</span>{delivery}</p>
+            <p className="ao-kv"><span>Paiement</span>À la livraison</p>
+          </section>
 
-          {tab === 'livraison' && (
-            <div className="pdo-pane">
-              <p className="pdo-kv"><span>Adresse de livraison</span>{order.address}</p>
-              <p className="pdo-kv"><span>Frais de livraison</span>{delivery}</p>
-              <p className="pdo-kv"><span>Paiement</span>À la livraison</p>
+          <section className="ao-card">
+            <h2>Statut</h2>
+            <div className="ao-status">
+              {STATUSES.map((s) => (
+                <button
+                  key={s}
+                  disabled={updating}
+                  className={order.status === s ? 'current' : ''}
+                  onClick={() => changeStatus(s)}
+                >
+                  {s}
+                </button>
+              ))}
             </div>
-          )}
-
-          {tab === 'statut' && (
-            <div className="pdo-pane">
-              <p className="pdo-kv"><span>Statut actuel</span>{order.status}</p>
-              <div className="pdo-status">
-                {STATUSES.map((s) => (
-                  <button
-                    key={s}
-                    disabled={updating}
-                    className={order.status === s ? 'current' : ''}
-                    onClick={() => changeStatus(s)}
-                  >
-                    {s}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
+          </section>
         </div>
       </div>
     </div>
