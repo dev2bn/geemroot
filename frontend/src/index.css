@@ -463,3 +463,57 @@ img { max-width: 100%; }
   .pd-head h1 { font-size: 22px; overflow-wrap: anywhere; }
   .pd-desc, .pd-tab-text { overflow-wrap: anywhere; }
 }
+/* ===== Admin : barre + menu latéral mobile ===== */
+.adl-top, .adl-overlay, .adl-close { display: none; }
+
+@media (max-width: 800px) {
+  .adl { display: block !important; }
+
+  .adl-top {
+    display: flex; align-items: center; gap: 12px;
+    position: sticky; top: 0; z-index: 40;
+    background: #f6f1e7; border-bottom: 1px solid #e6dfd0;
+    padding: 10px 16px;
+  }
+  .adl-burger {
+    width: 40px; height: 40px; border: none; border-radius: 12px;
+    background: #fff; color: #111; display: grid; place-items: center; cursor: pointer;
+  }
+  .adl-top-logo { font-weight: 700; font-size: 16px; }
+
+  .adl-overlay {
+    display: block; position: fixed; inset: 0; z-index: 60;
+    background: rgba(0, 0, 0, .4);
+  }
+
+  .adl-side {
+    position: fixed !important; top: 0; left: 0; bottom: 0; z-index: 70;
+    width: 280px !important; max-width: 85vw; height: 100dvh !important;
+    flex-direction: column !important; gap: 0 !important;
+    padding: 20px 14px !important; overflow-y: auto;
+    transform: translateX(-100%); transition: transform .25s ease;
+  }
+  .adl-side.open { transform: none; box-shadow: 0 0 40px rgba(0, 0, 0, .25); }
+
+  .adl-close {
+    display: grid; place-items: center; position: absolute; top: 14px; right: 14px;
+    width: 34px; height: 34px; border: none; border-radius: 50%;
+    background: #fff; cursor: pointer; font-size: 14px;
+  }
+  .adl-logo { margin-bottom: 20px !important; }
+
+  .adl-side nav {
+    flex-direction: column !important; overflow: visible !important;
+    white-space: normal !important; gap: 4px !important;
+  }
+  .adl-side nav a { padding: 13px 14px; font-size: 15px; }
+
+  .adl-foot {
+    flex-direction: column !important; align-items: stretch !important;
+    margin-top: auto; padding-top: 16px; border-top: 1px solid #e6dfd0; gap: 10px;
+  }
+  .adl-foot a { padding: 6px 4px; }
+  .adl-foot button { padding: 12px; }
+
+  .adl-content { padding: 16px !important; }
+}
