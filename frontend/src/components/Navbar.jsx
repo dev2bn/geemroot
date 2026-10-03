@@ -13,7 +13,7 @@ export default function Navbar() {
         <Link to="/" className="logo">Geem</Link>
         <nav className="nav-links">
           <Link to="/">Accueil</Link>
-          <a href="/#produits">Produits</a>
+          <Link to="/produits">Produits</Link>
           <a href="/#contact">Contact</a>
         </nav>
         <Link to="/panier" className="cart-link">

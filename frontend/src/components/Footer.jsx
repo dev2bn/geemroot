@@ -13,7 +13,7 @@ export default function Footer() {
         </div>
         <div>
           <h3>Contact</h3>
-          <p className="footer-text">WhatsApp : +33 6 00 00 00 00</p>
+          <p className="footer-text">WhatsApp : +24174873340</p>
         </div>
       </div>
       <p className="footer-copy">© 2026 Geem. Tous droits réservés.</p>

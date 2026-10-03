@@ -542,3 +542,30 @@ img { max-width: 100%; }
 .adm-sub { margin-top: 12px; font-size: 15px; }
 .adm-hint { margin: -6px 0 0; color: #777; font-size: 12px; }
 .pd-tab-text { white-space: pre-line; }
+.pf { padding: 24px 0 64px; }
+.pf h1 { font-size: 28px; margin-bottom: 4px; }
+.pf-sub { color: var(--muted); margin-bottom: 20px; }
+.pf-layout { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 28px; align-items: start; }
+.pf-side { background: var(--card); border-radius: 20px; padding: 18px; position: sticky; top: 110px; display: flex; flex-direction: column; gap: 18px; }
+.pf-side h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: #777; font-weight: 600; margin-bottom: 8px; }
+.pf-input { width: 100%; padding: 11px 14px; border: 1px solid #ddd5c4; border-radius: 10px; background: #fff; font: inherit; font-size: 14px; }
+.pf-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.pf-chip { border: none; background: #fff; border-radius: 999px; padding: 8px 14px; font-size: 13px; cursor: pointer; }
+.pf-chip.active { background: #111; color: #fff; }
+.pf-chip small { opacity: .6; margin-left: 6px; }
+.pf-price { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.pf-check { display: flex; align-items: center; gap: 10px; font-size: 14px; cursor: pointer; }
+.pf-reset { background: none; border: 1px solid #ddd5c4; border-radius: 999px; padding: 10px; cursor: pointer; font-size: 13px; }
+.pf-bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 16px; }
+.pf-count { color: #777; font-size: 14px; }
+.pf-bar-right { display: flex; gap: 8px; align-items: center; }
+.pf-sort { width: auto; padding-right: 8px; }
+.pf-toggle { display: none; background: #111; color: #fff; border: none; border-radius: 999px; padding: 10px 16px; font-size: 13px; cursor: pointer; }
+.pf-empty { background: var(--card); border-radius: 20px; padding: 32px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+
+@media (max-width: 800px) {
+  .pf-layout { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .pf-toggle { display: inline-block; }
+  .pf-side { display: none; position: static; margin-bottom: 16px; }
+  .pf-side.open { display: flex; }
+}

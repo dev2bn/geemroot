@@ -12,6 +12,7 @@ import AdminProductForm from './pages/AdminProductForm'
 import AdminCategories from './pages/AdminCategories'
 import AdminCustomers from './pages/AdminCustomers'
 import AdminCustomer from './pages/AdminCustomer'
+import Products from './pages/Products'
 
 export default function App() {
   const isAdmin = useLocation().pathname.startsWith('/admin')
@@ -34,6 +35,7 @@ export default function App() {
             <Route path="rubriques" element={<AdminCategories />} />
             <Route path="clients" element={<AdminCustomers />} />
             <Route path="clients/:key" element={<AdminCustomer />} />
+            <Route path="/produits" element={<Products />} />
           </Route>
         </Routes>
       </main>
