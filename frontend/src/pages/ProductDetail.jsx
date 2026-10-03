@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { CURRENCY } from '../config.js'
 import { getProductImage } from '../productImages.js'
+import { useCart } from '../cart.jsx'
 
 const fmt = (n) => Number(n).toLocaleString('fr-FR')
 
@@ -26,11 +27,13 @@ const TABS = {
 
 export default function ProductDetail() {
   const { id } = useParams()
+  const { add } = useCart()
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
   const [quantity, setQuantity] = useState(1)
+  const [added, setAdded] = useState(false)
   const [showForm, setShowForm] = useState(false)
   const [showSummary, setShowSummary] = useState(false)
   const [sending, setSending] = useState(false)
@@ -135,9 +138,18 @@ export default function ProductDetail() {
               <button className="pd-btn-dark" onClick={() => setShowForm(true)} disabled={outOfStock}>
                 {outOfStock ? 'Rupture de stock' : 'Commander maintenant'}
               </button>
-              <button className="pd-btn-outline" type="button">
-                Ajouter au panier
+              <button
+                className="pd-btn-outline"
+                type="button"
+                disabled={outOfStock}
+                onClick={() => {
+                  add(product, quantity)
+                  setAdded(true)
+                }}
+              >
+                {added ? 'Ajouté ✓' : 'Ajouter au panier'}
               </button>
+              {added && <Link to="/panier" className="pd-small">Voir le panier →</Link>}
             </>
           )}
 

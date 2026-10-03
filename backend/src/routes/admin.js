@@ -222,7 +222,8 @@ router.put('/categories/:id/products', async (req, res) => {
 router.get('/customers', async (req, res) => {
   try {
     const r = await pool.query(
-      `SELECT phone,
+      `SELECT regexp_replace(phone, '\\D', '', 'g') AS key,
+              (array_agg(phone ORDER BY id DESC))[1] AS phone,
               (array_agg(customer_name ORDER BY id DESC))[1] AS customer_name,
               (array_agg(email ORDER BY id DESC))[1] AS email,
               (array_agg(address ORDER BY id DESC))[1] AS address,
@@ -230,10 +231,43 @@ router.get('/customers', async (req, res) => {
               COALESCE(SUM(total) FILTER (WHERE status <> 'annulée'), 0) AS total_spent,
               MAX(created_at) AS last_order
        FROM orders
-       GROUP BY phone
+       GROUP BY regexp_replace(phone, '\\D', '', 'g')
        ORDER BY MAX(created_at) DESC`
     );
     res.json(r.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
+router.get('/customers/:key', async (req, res) => {
+  const key = String(req.params.key).replace(/\D/g, '');
+  if (!key) return res.status(400).json({ error: 'Client invalide' });
+  try {
+    const r = await pool.query(
+      `SELECT id, customer_name, phone, email, address, status, total, created_at
+       FROM orders
+       WHERE regexp_replace(phone, '\\D', '', 'g') = $1
+       ORDER BY created_at DESC`,
+      [key]
+    );
+    if (r.rows.length === 0) return res.status(404).json({ error: 'Client introuvable' });
+    const latest = r.rows[0];
+    const total_spent = r.rows
+      .filter((o) => o.status !== 'annulée')
+      .reduce((s, o) => s + Number(o.total), 0);
+    res.json({
+      customer: {
+        customer_name: latest.customer_name,
+        phone: latest.phone,
+        email: latest.email,
+        address: latest.address,
+        orders_count: r.rows.length,
+        total_spent,
+      },
+      orders: r.rows,
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Erreur serveur' });

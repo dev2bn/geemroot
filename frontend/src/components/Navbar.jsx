@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom'
+import { useCart } from '../cart.jsx'
 
 export default function Navbar() {
+  const { count } = useCart()
+
   return (
     <header className="header">
       <div className="promo-bar">
@@ -14,7 +17,7 @@ export default function Navbar() {
           <a href="/#contact">Contact</a>
         </nav>
         <Link to="/panier" className="cart-link">
-          Panier <span className="cart-badge">0</span>
+          Panier {count > 0 && <span className="cart-badge">{count}</span>}
         </Link>
       </div>
     </header>
