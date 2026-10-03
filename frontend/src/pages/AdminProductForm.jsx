@@ -2,7 +2,10 @@ import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import { adminFetch } from '../adminApi'
 
-const empty = { name: '', description: '', price: '', stock: '', category_id: '', image_url: '' }
+const empty = {
+  name: '', description: '', price: '', stock: '', category_id: '', image_url: '',
+  usage_text: '', benefits_text: '', ingredients_text: '',
+}
 
 export default function AdminProductForm() {
   const { id } = useParams()
@@ -29,6 +32,9 @@ export default function AdminProductForm() {
           stock: p.stock ?? '',
           category_id: p.category_id ?? '',
           image_url: p.image_url || '',
+          usage_text: p.usage_text || '',
+          benefits_text: p.benefits_text || '',
+          ingredients_text: p.ingredients_text || '',
         })
       )
       .catch((e) => setError(e.message))
@@ -142,6 +148,18 @@ export default function AdminProductForm() {
           onChange={(e) => setFile(e.target.files[0] || null)}
         />
         {preview && <img src={preview} alt="Aperçu" className="adm-preview" />}
+
+        <h3 className="adm-sub">Infos de la fiche produit</h3>
+        <p className="adm-hint">Laisse vide pour garder le texte par défaut.</p>
+
+        <label>Utilisation</label>
+        <textarea name="usage_text" value={form.usage_text} onChange={handleChange} />
+
+        <label>Bénéfices</label>
+        <textarea name="benefits_text" value={form.benefits_text} onChange={handleChange} />
+
+        <label>Ingrédients</label>
+        <textarea name="ingredients_text" value={form.ingredients_text} onChange={handleChange} />
 
         {error && <p className="error">{error}</p>}
         <button className="pd-btn-dark" type="submit" disabled={saving}>

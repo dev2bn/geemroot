@@ -539,3 +539,6 @@ img { max-width: 100%; }
 .card-foot { justify-content: flex-start; }
 .card-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .card-actions .btn { padding: 10px 8px; font-size: 13px; text-align: center; }
+.adm-sub { margin-top: 12px; font-size: 15px; }
+.adm-hint { margin: -6px 0 0; color: #777; font-size: 12px; }
+.pd-tab-text { white-space: pre-line; }

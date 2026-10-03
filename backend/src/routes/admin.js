@@ -44,6 +44,7 @@ function parseProduct(body) {
   if (!name) return { error: 'Nom requis' };
   if (!Number.isFinite(price) || price < 0) return { error: 'Prix invalide' };
   if (!Number.isInteger(stock) || stock < 0) return { error: 'Stock invalide' };
+  const txt = (v) => (v || '').trim() || null;
   return {
     value: {
       name,
@@ -52,6 +53,9 @@ function parseProduct(body) {
       stock,
       category_id: parseInt(body.category_id, 10) || null,
       image_url: (body.image_url || '').trim() || null,
+      usage_text: txt(body.usage_text),
+      benefits_text: txt(body.benefits_text),
+      ingredients_text: txt(body.ingredients_text),
     },
   };
 }
@@ -87,9 +91,12 @@ router.post('/products', async (req, res) => {
     if (!cat) return res.status(400).json({ error: 'Rubrique invalide' });
     const slug = await uniqueSlug(value.name);
     const r = await pool.query(
-      `INSERT INTO products (name, slug, description, price, stock, category, category_id, image_url, is_active)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, true) RETURNING *`,
-      [value.name, slug, value.description, value.price, value.stock, cat.name, cat.id, value.image_url]
+      `INSERT INTO products
+         (name, slug, description, price, stock, category, category_id, image_url, is_active,
+          usage_text, benefits_text, ingredients_text)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, true, $9, $10, $11) RETURNING *`,
+      [value.name, slug, value.description, value.price, value.stock, cat.name, cat.id, value.image_url,
+       value.usage_text, value.benefits_text, value.ingredients_text]
     );
     res.status(201).json(r.rows[0]);
   } catch (err) {
@@ -106,9 +113,11 @@ router.put('/products/:id', async (req, res) => {
     if (!cat) return res.status(400).json({ error: 'Rubrique invalide' });
     const r = await pool.query(
       `UPDATE products
-       SET name = $1, description = $2, price = $3, stock = $4, category = $5, category_id = $6, image_url = $7
-       WHERE id = $8 AND is_active = true RETURNING *`,
-      [value.name, value.description, value.price, value.stock, cat.name, cat.id, value.image_url, req.params.id]
+       SET name = $1, description = $2, price = $3, stock = $4, category = $5, category_id = $6, image_url = $7,
+           usage_text = $8, benefits_text = $9, ingredients_text = $10
+       WHERE id = $11 AND is_active = true RETURNING *`,
+      [value.name, value.description, value.price, value.stock, cat.name, cat.id, value.image_url,
+       value.usage_text, value.benefits_text, value.ingredients_text, req.params.id]
     );
     if (r.rows.length === 0) return res.status(404).json({ error: 'Produit introuvable' });
     res.json(r.rows[0]);

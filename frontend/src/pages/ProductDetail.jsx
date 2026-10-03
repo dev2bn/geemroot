@@ -6,7 +6,7 @@ import { useCart } from '../cart.jsx'
 
 const fmt = (n) => Number(n).toLocaleString('fr-FR')
 
-const TABS = {
+const DEFAULT_TABS = {
   usage: {
     label: 'Utilisation',
     text: "Appliquer quelques gouttes sur le cuir chevelu et masser doucement pendant 5 minutes. Laisser poser 30 minutes ou toute la nuit, puis rincer. Utiliser 2 à 3 fois par semaine.",
@@ -19,10 +19,12 @@ const TABS = {
     label: 'Ingrédients',
     text: "Huiles 100 % naturelles. Liste complète des ingrédients à compléter.",
   },
-  delivery: {
-    label: 'Livraison',
-    text: "Paiement à la livraison. Les frais de livraison sont confirmés par la vendeuse selon votre adresse.",
-  },
+}
+
+const TAB_FIELDS = {
+  usage: 'usage_text',
+  benefits: 'benefits_text',
+  ingredients: 'ingredients_text',
 }
 
 export default function ProductDetail() {
@@ -90,6 +92,13 @@ export default function ProductDetail() {
 
   const img = /^(https?:)?\/\/|^\/api\/uploads\//.test(product.image_url || '') ? product.image_url : getProductImage(product)
   const outOfStock = product.stock < 1
+
+  const tabs = Object.fromEntries(
+    Object.entries(DEFAULT_TABS).map(([k, t]) => [
+      k,
+      { label: t.label, text: product[TAB_FIELDS[k]] || t.text },
+    ])
+  )
 
   return (
     <div className="pd">
@@ -192,7 +201,7 @@ export default function ProductDetail() {
           {error && <p className="error">{error}</p>}
 
           <div className="pd-tabs">
-            {Object.entries(TABS).map(([key, t]) => (
+            {Object.entries(tabs).map(([key, t]) => (
               <button
                 key={key}
                 type="button"
@@ -203,7 +212,7 @@ export default function ProductDetail() {
               </button>
             ))}
           </div>
-          <p className="pd-tab-text">{TABS[tab].text}</p>
+          <p className="pd-tab-text">{tabs[tab].text}</p>
         </div>
       </div>
     </div>
