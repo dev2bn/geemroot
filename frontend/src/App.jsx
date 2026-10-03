@@ -2,6 +2,7 @@ import { Routes, Route, useLocation } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import Catalog from './pages/catalog'
+import Products from './pages/Products'
 import ProductDetail from './pages/ProductDetail'
 import Cart from './pages/Cart'
 import AdminLayout from './pages/AdminLayout'
@@ -12,7 +13,6 @@ import AdminProductForm from './pages/AdminProductForm'
 import AdminCategories from './pages/AdminCategories'
 import AdminCustomers from './pages/AdminCustomers'
 import AdminCustomer from './pages/AdminCustomer'
-import Products from './pages/Products'
 
 export default function App() {
   const isAdmin = useLocation().pathname.startsWith('/admin')
@@ -23,6 +23,7 @@ export default function App() {
       <main className={isAdmin ? '' : 'main'}>
         <Routes>
           <Route path="/" element={<Catalog />} />
+          <Route path="/produits" element={<Products />} />
           <Route path="/produit/:id" element={<ProductDetail />} />
           <Route path="/panier" element={<Cart />} />
 
@@ -35,7 +36,6 @@ export default function App() {
             <Route path="rubriques" element={<AdminCategories />} />
             <Route path="clients" element={<AdminCustomers />} />
             <Route path="clients/:key" element={<AdminCustomer />} />
-            <Route path="/produits" element={<Products />} />
           </Route>
         </Routes>
       </main>
