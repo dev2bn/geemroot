@@ -887,3 +887,13 @@ img { max-width: 100%; }
   .np-grid { grid-template-columns: 1fr; }
   .np-card input:not([type="file"]), .np-card select, .np-card textarea { font-size: 16px; }
 }
+
+/* --- Logo image (taille bridée) --- */
+.logo { display: inline-flex; align-items: center; }
+.logo-img { height: 36px; max-height: 36px; width: auto; max-width: 140px; object-fit: contain; display: block; }
+.nav-drawer-head .logo-img { height: 32px; max-height: 32px; }
+@media (max-width: 760px) { .logo-img { height: 30px; max-height: 30px; max-width: 120px; } }
+.np-logo-drop { display: flex; align-items: center; justify-content: center; height: 90px; border: 2px dashed #cfd8d2; border-radius: 12px; background: #fafcfb; cursor: pointer; overflow: hidden; color: #777; font-size: .9rem; text-transform: none !important; letter-spacing: 0 !important; font-weight: 500 !important; }
+.np-logo-drop:hover { border-color: #22a85a; background: #f4fbf6; }
+.np-logo-drop img { height: 36px; max-width: 140px; object-fit: contain; display: block; }
+.np-logo-drop input { display: none; }

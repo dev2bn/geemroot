@@ -9,7 +9,7 @@ pool.query('CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEX
 
 async function read() {
   const r = await pool.query('SELECT key, value FROM settings')
-  const out = { logo_text: 'Geem', hero_image: '' }
+  const out = { logo_text: 'Geem', logo_image: '', hero_image: '' }
   r.rows.forEach((x) => { out[x.key] = x.value })
   return out
 }
@@ -29,8 +29,9 @@ router.get('/', async (req, res) => {
 adminSettingsRouter.put('/', requireAdmin, async (req, res) => {
   try {
     const logo = String(req.body.logo_text || '').trim().slice(0, 40) || 'Geem'
+    const logoImg = String(req.body.logo_image || '').trim().slice(0, 500)
     const hero = String(req.body.hero_image || '').trim().slice(0, 500)
-    for (const [k, v] of [['logo_text', logo], ['hero_image', hero]]) {
+    for (const [k, v] of [['logo_text', logo], ['logo_image', logoImg], ['hero_image', hero]]) {
       await pool.query(
         'INSERT INTO settings (key, value) VALUES ($1, $2) ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value',
         [k, v]

@@ -33,7 +33,7 @@ export default function Navbar() {
             </svg>
           </button>
 
-          <Link to="/" className="logo">{settings.logo_text}</Link>
+          <Link to="/" className="logo">{settings.logo_image ? <img src={settings.logo_image} alt={settings.logo_text} className="logo-img" /> : settings.logo_text}</Link>
 
           <nav className="nav-links">
             <Link to="/">Accueil</Link>
@@ -51,7 +51,7 @@ export default function Navbar() {
 
       <aside className={`nav-drawer ${open ? 'open' : ''}`} aria-hidden={!open}>
         <div className="nav-drawer-head">
-          <span className="logo">{settings.logo_text}</span>
+          <span className="logo">{settings.logo_image ? <img src={settings.logo_image} alt={settings.logo_text} className="logo-img" /> : settings.logo_text}</span>
           <button className="nav-close" onClick={() => setOpen(false)} aria-label="Fermer le menu">✕</button>
         </div>
 
