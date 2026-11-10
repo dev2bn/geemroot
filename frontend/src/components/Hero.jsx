@@ -16,7 +16,7 @@ export default function Hero() {
         <img src={settings.hero_image || heroImg} alt="Huiles capillaires Geem Root" className="hero-bg" />
         <div className="hero-overlay" />
         <div className="hero-text">
-          <span className="hero-tag">Geem Root · Premium hair care</span>
+          <span className="hero-tag">Gem Root · Premium hair care</span>
           <h1>
             Des cheveux <span className="hl">plus forts</span>, naturellement.
           </h1>
