@@ -2,3 +2,6 @@
 *.env
 .env
 dist
+
+*.bak
+*.bak*

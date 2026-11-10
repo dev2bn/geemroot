@@ -3,17 +3,28 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import pool from './db.js';
 import productsRouter from './routes/products.js';
+import settingsRouter, { adminSettingsRouter } from './routes/settings.js';
 import zonesRouter from './routes/zones.js';
 import ordersRouter from './routes/orders.js';
 import adminRoutes from './routes/admin.js';
 import uploadRoutes, { UPLOAD_DIR } from './routes/upload.js';
 import ordersRoutes from './routes/orders.js';
+import commentsRouter from './routes/comments.js';
+import adminCommentsRouter from './routes/adminComments.js';
+import formsRouter from './routes/forms.js';
+import adminFormsRouter from './routes/adminForms.js';
 
 dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use('/api/admin/comments', adminCommentsRouter);
+app.use('/api/comments', commentsRouter);
+app.use('/api/admin/forms', adminFormsRouter);
+app.use('/api/forms', formsRouter);
+app.use('/api/admin/settings', adminSettingsRouter);
+app.use('/api/settings', settingsRouter);
 app.use('/api/products', productsRouter);
 app.use('/api/zones', zonesRouter);
 app.use('/api/orders', ordersRouter);

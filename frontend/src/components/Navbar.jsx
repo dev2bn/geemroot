@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { useCart } from '../cart.jsx'
+import { useSettings } from '../settings.js'
 
 export default function Navbar() {
   const { count } = useCart()
+  const settings = useSettings()
   const [open, setOpen] = useState(false)
   const { pathname } = useLocation()
 
@@ -31,7 +33,7 @@ export default function Navbar() {
             </svg>
           </button>
 
-          <Link to="/" className="logo">Geem</Link>
+          <Link to="/" className="logo">{settings.logo_text}</Link>
 
           <nav className="nav-links">
             <Link to="/">Accueil</Link>
@@ -49,7 +51,7 @@ export default function Navbar() {
 
       <aside className={`nav-drawer ${open ? 'open' : ''}`} aria-hidden={!open}>
         <div className="nav-drawer-head">
-          <span className="logo">Geem</span>
+          <span className="logo">{settings.logo_text}</span>
           <button className="nav-close" onClick={() => setOpen(false)} aria-label="Fermer le menu">✕</button>
         </div>
 

@@ -53,11 +53,21 @@ export default function AdminLayout() {
         <button className="adl-close" onClick={() => setOpen(false)} aria-label="Fermer le menu">✕</button>
         <Link to="/admin" className="adl-logo">Geem · Admin</Link>
         <nav>
+          <p className="adl-sec">Ventes</p>
           <NavLink to="/admin" end>Commandes</NavLink>
-          <NavLink to="/admin/produits" end>Produits</NavLink>
-          <NavLink to="/admin/produits/nouveau">+ Nouveau produit</NavLink>
-          <NavLink to="/admin/rubriques">Rubriques</NavLink>
           <NavLink to="/admin/clients">Clients</NavLink>
+          <NavLink to="/admin/avis">Avis</NavLink>
+
+          <p className="adl-sec">Catalogue</p>
+          <NavLink to="/admin/produits" end>Produits</NavLink>
+          <NavLink to="/admin/produits/nouveau">Nouveau produit</NavLink>
+          <NavLink to="/admin/rubriques">Rubriques</NavLink>
+          <NavLink to="/admin/stock">Stock</NavLink>
+
+          <p className="adl-sec">Gestion</p>
+          <NavLink to="/admin/comptabilite">Comptabilité</NavLink>
+          <NavLink to="/admin/formulaires">Formulaires</NavLink>
+          <NavLink to="/admin/apparence">Apparence</NavLink>
         </nav>
         <div className="adl-foot">
           <Link to="/">← Voir la boutique</Link>

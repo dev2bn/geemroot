@@ -89,6 +89,7 @@ router.post('/', async (req, res) => {
         [orderId, l.id, l.name, l.unitPrice, l.qty]
       );
       await client.query('UPDATE products SET stock = stock - $1 WHERE id = $2', [l.qty, l.id]);
+      await client.query("INSERT INTO stock_movements (product_id, quantity, reason, order_id) VALUES ($1, $2, 'commande', $3)", [l.id, -l.qty, orderId]);
     }
 
     await client.query('COMMIT');
@@ -170,6 +171,7 @@ router.patch('/:id/status', requireAdmin, async (req, res) => {
       );
       for (const it of items.rows) {
         await client.query('UPDATE products SET stock = stock + $1 WHERE id = $2', [it.quantity, it.product_id]);
+        await client.query("INSERT INTO stock_movements (product_id, quantity, reason, order_id) VALUES ($1, $2, 'annulation', $3)", [it.product_id, it.quantity, req.params.id]);
       }
     }
     // Réactivation d'une commande annulée : on retire à nouveau le stock
@@ -180,10 +182,32 @@ router.patch('/:id/status', requireAdmin, async (req, res) => {
       );
       for (const it of items.rows) {
         await client.query('UPDATE products SET stock = stock - $1 WHERE id = $2', [it.quantity, it.product_id]);
+        await client.query("INSERT INTO stock_movements (product_id, quantity, reason, order_id) VALUES ($1, $2, 'reactivation', $3)", [it.product_id, -it.quantity, req.params.id]);
       }
     }
 
-    const upd = await client.query(
+        // Comptabilite : STATUSES[1] = confirmee, [2] = livree, [3] = annulee
+    if (status === STATUSES[1] || status === STATUSES[2]) {
+      const net = await client.query('SELECT COALESCE(SUM(revenue), 0) AS r FROM accounting_entries WHERE order_id = $1', [req.params.id]);
+      if (Number(net.rows[0].r) === 0) {
+        await client.query('UPDATE order_items oi SET unit_cost = p.cost_price FROM products p WHERE p.id = oi.product_id AND oi.order_id = $1', [req.params.id]);
+        const o = await client.query('SELECT subtotal, delivery_fee FROM orders WHERE id = $1', [req.params.id]);
+        const c = await client.query('SELECT COALESCE(SUM(unit_cost * quantity), 0) AS cogs FROM order_items WHERE order_id = $1', [req.params.id]);
+        const revenue = Number(o.rows[0].subtotal);
+        const fee = Number(o.rows[0].delivery_fee);
+        const cogs = Number(c.rows[0].cogs);
+        await client.query("INSERT INTO accounting_entries (order_id, type, revenue, delivery_fee, cogs, margin) VALUES ($1, 'vente', $2, $3, $4, $5)", [req.params.id, revenue, fee, cogs, revenue - cogs]);
+      }
+    }
+    if (status === STATUSES[3]) {
+      const s = await client.query('SELECT COALESCE(SUM(revenue), 0) AS revenue, COALESCE(SUM(delivery_fee), 0) AS fee, COALESCE(SUM(cogs), 0) AS cogs FROM accounting_entries WHERE order_id = $1', [req.params.id]);
+      const r = s.rows[0];
+      if (Number(r.revenue) !== 0) {
+        const rev = Number(r.revenue), fee = Number(r.fee), cogs = Number(r.cogs);
+        await client.query("INSERT INTO accounting_entries (order_id, type, revenue, delivery_fee, cogs, margin) VALUES ($1, 'annulation', $2, $3, $4, $5)", [req.params.id, -rev, -fee, -cogs, -(rev - cogs)]);
+      }
+    }
+const upd = await client.query(
       'UPDATE orders SET status = $1 WHERE id = $2 RETURNING *',
       [status, req.params.id]
     );

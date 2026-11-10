@@ -1,17 +1,19 @@
 import heroImg from "../assets/products/banner.png";
 import { Link } from "react-router-dom";
+import { useSettings } from "../settings.js";
 
 const perks = [
-  { icon: "🌿", title: "100 % naturel", text: "Des huiles sélectionnées pour nourrir le cuir chevelu." },
-  { icon: "🚚", title: "Livraison rapide", text: "Livraison dans toute la ville, paiement à la livraison." },
-  { icon: "💬", title: "Commande WhatsApp", text: "Commandez en 2 minutes, nous vous confirmons aussitôt." },
+  { title: "100 % naturel", text: "Des huiles sélectionnées pour nourrir le cuir chevelu." },
+  { title: "Livraison rapide", text: "Livraison dans toute la ville, paiement à la livraison." },
+  { title: "Commande WhatsApp", text: "Commandez en 2 minutes, nous vous confirmons aussitôt." },
 ];
 
 export default function Hero() {
+  const settings = useSettings();
   return (
     <>
       <section className="hero">
-        <img src={heroImg} alt="Huiles capillaires Geem Root" className="hero-bg" />
+        <img src={settings.hero_image || heroImg} alt="Huiles capillaires Geem Root" className="hero-bg" />
         <div className="hero-overlay" />
         <div className="hero-text">
           <span className="hero-tag">Geem Root · Premium hair care</span>
@@ -29,7 +31,6 @@ export default function Hero() {
       <section className="perks">
         {perks.map((p) => (
           <div className="perk" key={p.title}>
-            <div className="perk-icon">{p.icon}</div>
             <h3>{p.title}</h3>
             <p>{p.text}</p>
           </div>

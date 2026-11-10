@@ -47,6 +47,12 @@ export default function ProductDetail() {
     address: '',
   })
 
+  const [comments, setComments] = useState([])
+  const [reviewForm, setReviewForm] = useState({ author_name: '', content: '' })
+  const [reviewSending, setReviewSending] = useState(false)
+  const [reviewMsg, setReviewMsg] = useState('')
+  const [reviewError, setReviewError] = useState('')
+
   useEffect(() => {
     fetch(`/api/products/${id}`)
       .then((r) => {
@@ -58,13 +64,50 @@ export default function ProductDetail() {
       .finally(() => setLoading(false))
   }, [id])
 
+  useEffect(() => {
+    fetch(`/api/comments/${id}`)
+      .then((r) => (r.ok ? r.json() : []))
+      .then((list) => setComments(Array.isArray(list) ? list : []))
+      .catch(() => setComments([]))
+  }, [id])
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
-  const subtotal = product ? Number(product.price) * quantity : 0
+  const handleReviewChange = (e) => {
+    setReviewForm({ ...reviewForm, [e.target.name]: e.target.value })
+  }
 
+  const submitReview = async (e) => {
+    e.preventDefault()
+    setReviewSending(true)
+    setReviewError('')
+    setReviewMsg('')
+    try {
+      const res = await fetch('/api/comments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          product_id: Number(id),
+          author_name: reviewForm.author_name.trim(),
+          content: reviewForm.content.trim(),
+        }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) throw new Error(data.error || "Erreur lors de l'envoi de l'avis")
+      setReviewForm({ author_name: '', content: '' })
+      setReviewMsg('Merci, votre avis sera publié après validation.')
+    } catch (err) {
+      setReviewError(err.message)
+    } finally {
+      setReviewSending(false)
+    }
+  }
+
+  const subtotal = product ? Number(product.price) * quantity : 0
   const formValid = form.customer_name && form.phone && form.email && form.address
+  const reviewValid = reviewForm.author_name.trim() && reviewForm.content.trim()
 
   const confirmOrder = async () => {
     setSending(true)
@@ -215,6 +258,45 @@ export default function ProductDetail() {
           <p className="pd-tab-text">{tabs[tab].text}</p>
         </div>
       </div>
+
+      <section className="pd-reviews">
+        <h2>Avis clients ({comments.length})</h2>
+
+        {comments.length === 0 && <p className="pd-small">Aucun avis pour le moment.</p>}
+
+        <ul className="pd-review-list">
+          {comments.map((c) => (
+            <li key={c.id} className="pd-review">
+              <strong>{c.author_name}</strong>
+              <small> · {new Date(c.created_at).toLocaleDateString('fr-FR')}</small>
+              <p>{c.content}</p>
+            </li>
+          ))}
+        </ul>
+
+        <form className="pd-form" onSubmit={submitReview}>
+          <h3>Laisser un avis</h3>
+          <input
+            name="author_name"
+            placeholder="Votre nom"
+            maxLength={60}
+            value={reviewForm.author_name}
+            onChange={handleReviewChange}
+          />
+          <textarea
+            name="content"
+            placeholder="Votre commentaire"
+            maxLength={1000}
+            value={reviewForm.content}
+            onChange={handleReviewChange}
+          />
+          <button className="pd-btn-dark" type="submit" disabled={!reviewValid || reviewSending}>
+            {reviewSending ? 'Envoi...' : "Envoyer l'avis"}
+          </button>
+          {reviewMsg && <p className="pd-small">{reviewMsg}</p>}
+          {reviewError && <p className="error">{reviewError}</p>}
+        </form>
+      </section>
     </div>
   )
 }

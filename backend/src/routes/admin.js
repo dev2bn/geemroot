@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import pool from '../db.js';
+import accounting from './adminAccounting.js';
 
 const router = Router();
 
@@ -59,6 +60,8 @@ function parseProduct(body) {
     },
   };
 }
+
+router.use(accounting);
 
 /* ---------- Produits ---------- */
 
