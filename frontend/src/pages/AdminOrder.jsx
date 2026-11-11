@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { adminFetch } from '../adminApi'
+import AdminInvoice from './AdminInvoice'
 import { CURRENCY } from '../config'
 import { getProductImage } from '../productImages.js'
 
@@ -15,6 +16,7 @@ export default function AdminOrder() {
   const [loading, setLoading] = useState(true)
   const [updating, setUpdating] = useState(false)
   const [error, setError] = useState('')
+  const [showInvoice, setShowInvoice] = useState(false)
 
   useEffect(() => {
     setLoading(true)
@@ -65,6 +67,7 @@ export default function AdminOrder() {
 
   return (
     <div className="adm ao">
+      {showInvoice && <AdminInvoice order={order} onClose={() => setShowInvoice(false)} />}
       <Link to="/admin" className="ao-back">← Commandes</Link>
 
       <header className="ao-head">
@@ -111,6 +114,7 @@ export default function AdminOrder() {
             <div className="ao-actions">
               <a href={`tel:${order.phone}`}>Appeler</a>
               <a className="alt" href={`https://wa.me/${digits}`} target="_blank" rel="noreferrer">WhatsApp</a>
+              <a className="alt" href="#facture" onClick={(e) => { e.preventDefault(); setShowInvoice(true) }}>Facture</a>
             </div>
           </section>
 

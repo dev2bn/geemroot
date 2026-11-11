@@ -9,6 +9,7 @@ import Cart from './pages/Cart'
 import AdminLayout from './pages/AdminLayout'
 import AdminOrders from './pages/AdminOrders'
 import AdminOrder from './pages/AdminOrder'
+
 import AdminProducts from './pages/AdminProducts'
 import AdminProductForm from './pages/AdminProductForm'
 import AdminCategories from './pages/AdminCategories'
@@ -39,6 +40,7 @@ export default function App() {
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminOrders />} />
             <Route path="commande/:id" element={<AdminOrder />} />
+            
             <Route path="produits" element={<AdminProducts />} />
             <Route path="produits/nouveau" element={<AdminProductForm />} />
             <Route path="produits/:id/modifier" element={<AdminProductForm />} />
